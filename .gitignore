@@ -121,4 +121,4 @@ redingtext/training_data/*
 
 *.png
 
-output/cards.json
+output/
