@@ -120,3 +120,5 @@ redingtext/training_data/*
 .DS_Store
 
 *.png
+
+output/cards.json
