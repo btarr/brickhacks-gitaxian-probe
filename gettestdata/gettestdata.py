@@ -63,8 +63,8 @@ def fetch_random_card():
 def main():
   cards = []
   if os.path.isfile(CARD_OUTPUT_FILE):
-    with open(CARD_OUTPUT_FILE, 'r') as content_file:
-      cards = json.loads(content_file.read())
+    with open(CARD_OUTPUT_FILE, 'r') as cards_file:
+      cards = json.loads(cards_file.read())
   log('Fetching ' + str(NUMBER_OF_CARDS_TO_FETCH) + ' cards', True)
   for _ in range(0, NUMBER_OF_CARDS_TO_FETCH):
     log('Fetching card...')
