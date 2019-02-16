@@ -8,7 +8,7 @@ import os.path
 
 BASE_API_URI = 'https://api.scryfall.com'
 RANDOM_CARD_API = BASE_API_URI + '/cards/random'
-REQUEST_DELAY = .5 #second(s)
+REQUEST_DELAY = 1 #second(s)
 OUTPUT_FOLDER = './output'
 IMAGE_OUTPUT_FOLDER = './output/images'
 NUMBER_OF_CARDS_TO_FETCH = 100
@@ -34,8 +34,18 @@ def fetch_random_card():
 
   card = card_request.json()
 
-  card_name = card['name']
-  image_url = card['image_uris']['normal']
+  if card is None:
+    return None
+
+  card_name = card.get('name')
+
+  if not 'image_uris' in card:
+    return None
+
+  image_url = card.get('image_uris').get('normal')
+
+  if card_name is None or image_url is None:
+    return None
 
   # wait to request image so we don't overload the API
 
@@ -60,9 +70,15 @@ def main():
     log('Fetching card...')
     delay_before_request()
     card = fetch_random_card()
-    log('Fetched: ' + card['name'])
-    cards.append(card)
-    log(card['name'] + ' added', True)
+    if card is not None:
+      card_name = card.get('name')
+      log('Fetched: ' + card_name)
+      cards.append(card)
+      log(card_name + ' added', True)
+      continue
+    log('Fetch failed', True)
+    log('Stopping fetches after failure', True)
+    break
   cards_json = json.dumps(cards)
   with open(CARD_OUTPUT_FILE, 'w') as file:
     file.write(cards_json)
