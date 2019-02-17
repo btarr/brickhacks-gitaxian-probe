@@ -4,6 +4,8 @@ import { Loader, Header } from 'semantic-ui-react';
 
 const WEBCAM_CONSTRAINTS = { video: true }
 
+const SEND_PICTURE_URL = 'http://localhost:5000'
+
 export default class StreamOutput extends PureComponent {
 
   constructor() {
@@ -20,6 +22,17 @@ export default class StreamOutput extends PureComponent {
     this.updateVideoStream = this.updateVideoStream.bind(this);
     this.onWebcamAccess = this.onWebcamAccess.bind(this);
     this.onNoWebcamAccess = this.onNoWebcamAccess.bind(this);
+    this.handleSendPictureToEndpoint = this.handleSendPictureToEndpoint.bind(this);
+  }
+
+  handleSendPictureToEndpoint(picture) {
+    var fd = new FormData();
+    fd.append('fname', 'checkImage.jpeg');
+    fd.append('data', picture);
+    return fetch(SEND_PICTURE_URL, {
+      method: "POST",
+      body: fd
+    });
   }
 
   onWebcamAccess(stream) {
@@ -48,10 +61,12 @@ export default class StreamOutput extends PureComponent {
 
   componentWillUnmount() {
     this.track.stop();
+    clearTimeout(this.endpointPinger)
   }
 
-  captureWebcamImage(callback) {
-    this.imageCapture.takePhoto().then(callback);
+  captureWebcamImage() {
+    this.imageCapture.takePhoto().then(this.handleSendPictureToEndpoint);
+    this.endpointPinger = setTimeout(this.captureWebcamImage, 500);
   }
 
   updateVideoStream() {
@@ -63,6 +78,7 @@ export default class StreamOutput extends PureComponent {
         this.setState({
           videoOn: true,
         })
+        this.captureWebcamImage()
       }
     }
   }

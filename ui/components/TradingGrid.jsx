@@ -39,6 +39,7 @@ export default class TradingGrid extends PureComponent {
         <Grid.Row>
           <Header>{header}</Header>
         </Grid.Row>
+        {this.renderTotalRow()}
         {this.renderCards(cardsSource)}
         <Grid.Row>
           <CaptureVideoButton />
