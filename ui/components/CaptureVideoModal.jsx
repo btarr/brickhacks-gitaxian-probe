@@ -22,7 +22,7 @@ export default class CaptureVideoModal extends PureComponent {
 
   renderOpenModalButton() {
     return (
-      <Button onClick={this.handleOpen}>Open Modal</Button>
+      <Button onClick={this.handleOpen}>Read Cards Via Webcam</Button>
     );
   }
 
