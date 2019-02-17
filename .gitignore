@@ -113,4 +113,13 @@ venv.bak/
 dmypy.json
 
 # Pyre type checker
-.pyre/
+.pyre
+
+# Config file
+*config.py
+
+# Temp Directory
+*tmp/
+
+# Mac things
+*.DS_Store
