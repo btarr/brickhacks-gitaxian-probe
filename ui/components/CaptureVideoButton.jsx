@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Button, Modal } from 'semantic-ui-react'
 import StreamOutput from "./StreamOutput";
 
-export default class CaptureVideoModal extends PureComponent {
+export default class CaptureVideoButton extends PureComponent {
   constructor() {
     super()
     this.state = {
@@ -22,7 +22,7 @@ export default class CaptureVideoModal extends PureComponent {
 
   renderOpenModalButton() {
     return (
-      <Button onClick={this.handleOpen}>Read Cards Via Webcam</Button>
+      <Button primary={true} onClick={this.handleOpen}>Read Cards Via Webcam</Button>
     );
   }
 
