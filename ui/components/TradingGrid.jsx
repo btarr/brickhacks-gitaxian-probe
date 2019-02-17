@@ -8,9 +8,37 @@ export default class TradingGrid extends PureComponent {
   constructor() {
     super();
     this.state = {
-      yourCards: fromJS([ { name: 'test'}, {value : '$200'} ]),
+      yourCards: fromJS([]),
       theirCards: fromJS([])
     }
+    this.handleAddYourCard = this.handleAddYourCard.bind(this);
+    this.handleAddTheirCard = this.handleAddTheirCard.bind(this);
+    this.handleRemoveYourCard = this.handleRemoveYourCard.bind(this);
+    this.handleRemoveTheirCard = this.handleRemoveTheirCard.bind(this);
+  }
+
+  handleAddYourCard(cards) {
+    this.setState({
+      yourCards: this.state.yourCards.concat(cards)
+    })
+  }
+
+  handleAddTheirCard(cards) {
+    this.setState({
+      theirCards: this.state.theirCards.concat(cards)
+    })
+  }
+
+  handleRemoveYourCard(cardName) {
+    this.setState({
+      yourCards: this.state.yourCards.filterNot(card => card.get('name') === cardName)
+    })
+  }
+
+  handleRemoveTheirCard(cardName) {
+    this.setState({
+      theirCards: this.state.theirCards.filterNot(card => card.get('name') === cardName)
+    })
   }
 
   renderCard(cardInfo) {
@@ -33,7 +61,7 @@ export default class TradingGrid extends PureComponent {
     )
   }
 
-  renderColumn(header, cardsSource) {
+  renderColumn(header, cardsSource, handleAdd) {
     return (
       <Grid.Column>
         <Grid.Row>
@@ -42,7 +70,7 @@ export default class TradingGrid extends PureComponent {
         {this.renderTotalRow()}
         {this.renderCards(cardsSource)}
         <Grid.Row>
-          <CaptureVideoButton />
+          <CaptureVideoButton onSubmit={handleAdd} />
         </Grid.Row>
       </Grid.Column>
     );
@@ -51,8 +79,8 @@ export default class TradingGrid extends PureComponent {
   render() {
     return (
       <Grid columns={2} divided={true} centered={true} >
-        {this.renderColumn('Your Cards', this.state.yourCards)}
-        {this.renderColumn('Their Cards', this.state.theirCards)}
+        {this.renderColumn('Your Cards', this.state.yourCards, this.handleAddYourCard)}
+        {this.renderColumn('Their Cards', this.state.theirCards, this.handleAddTheirCard)}
       </Grid>
     );
   }

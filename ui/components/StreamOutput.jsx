@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { List } from 'immutable';
 import { Button, Header } from 'semantic-ui-react';
+import { fromJS } from 'immutable';
 
 const WEBCAM_CONSTRAINTS = { video: true }
 
@@ -23,6 +24,11 @@ export default class StreamOutput extends PureComponent {
     this.onWebcamAccess = this.onWebcamAccess.bind(this);
     this.onNoWebcamAccess = this.onNoWebcamAccess.bind(this);
     this.handleSendPictureToEndpoint = this.handleSendPictureToEndpoint.bind(this);
+    this.handleSuccessfulSend = this.handleSuccessfulSend.bind(this);
+  }
+
+  handleSuccessfulSend(submitData) {
+    this.props.onSubmit(fromJS(submitData).get('cards'));
   }
 
   handleSendPictureToEndpoint(picture) {
@@ -32,7 +38,7 @@ export default class StreamOutput extends PureComponent {
     return fetch(SEND_PICTURE_URL, {
       method: "POST",
       body: fd
-    });
+    }).then(this.handleSuccessfulSend);
   }
 
   onWebcamAccess(stream) {

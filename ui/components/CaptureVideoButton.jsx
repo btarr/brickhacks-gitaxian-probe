@@ -10,6 +10,12 @@ export default class CaptureVideoButton extends PureComponent {
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(submitData) {
+    this.props.onSubmit(submitData)
+    this.handleClose();
   }
 
   handleOpen() {
@@ -35,7 +41,7 @@ export default class CaptureVideoButton extends PureComponent {
           trigger={this.renderOpenModalButton()}
         >
           <Modal.Content>
-            <StreamOutput />
+            <StreamOutput onSubmit={this.handleSubmit} />
           </Modal.Content>
         </Modal>
       </>
