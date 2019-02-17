@@ -28,7 +28,7 @@ export default class StreamOutput extends PureComponent {
   }
 
   handleSuccessfulSend(submitData) {
-    this.props.onSubmit(fromJS(submitData).get('cards'));
+    submitData.json().then((submitJson) => this.props.onSubmit(fromJS(submitJson).get('cards')));
   }
 
   handleSendPictureToEndpoint(picture) {
