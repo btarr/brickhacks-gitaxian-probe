@@ -17,6 +17,14 @@ export default class TradingGrid extends PureComponent {
     this.handleRemoveTheirCard = this.handleRemoveTheirCard.bind(this);
   }
 
+  getTotal(cards) {
+    let total = 0;
+    cards.forEach((card) => {
+      total += card.get('price')
+    })
+    return total;
+  }
+
   handleAddYourCard(cards) {
     this.setState({
       yourCards: this.state.yourCards.concat(cards)
@@ -41,34 +49,34 @@ export default class TradingGrid extends PureComponent {
     })
   }
 
-  renderCard(cardInfo) {
+  renderCard(cardInfo, onRemove) {
     return (
-      <div key={cardInfo.get('name')}>
+      <div key={cardInfo.get('name')} className='card'>
         <Grid.Row>
-          <CardInfoCard cardInfo={cardInfo} />
+          <CardInfoCard cardInfo={cardInfo} onRemove={onRemove}/>
         </Grid.Row>
       </div>
     )
   }
 
-  renderCards(cardsSource) {
-    return cardsSource.map(this.renderCard);
+  renderCards(cardsSource, onRemove) {
+    return cardsSource.map(cardInfo => this.renderCard(cardInfo, onRemove));
   }
 
   renderTotalRow(total) {
     return (
-      <Header as="h3"> Total: {total} </Header>
+      <Header as="h3"> Total: {`$${total}`} </Header>
     )
   }
 
-  renderColumn(header, cardsSource, handleAdd) {
+  renderColumn(header, cardsSource, handleAdd, handleRemove) {
     return (
       <Grid.Column>
         <Grid.Row>
           <Header>{header}</Header>
         </Grid.Row>
-        {this.renderTotalRow()}
-        {this.renderCards(cardsSource)}
+        {this.renderTotalRow(this.getTotal(cardsSource))}
+        {this.renderCards(cardsSource, handleRemove)}
         <Grid.Row>
           <CaptureVideoButton onSubmit={handleAdd} />
         </Grid.Row>
@@ -79,8 +87,8 @@ export default class TradingGrid extends PureComponent {
   render() {
     return (
       <Grid columns={2} divided={true} centered={true} >
-        {this.renderColumn('Your Cards', this.state.yourCards, this.handleAddYourCard)}
-        {this.renderColumn('Their Cards', this.state.theirCards, this.handleAddTheirCard)}
+        {this.renderColumn('Your Cards', this.state.yourCards, this.handleAddYourCard, this.handleRemoveYourCard)}
+        {this.renderColumn('Their Cards', this.state.theirCards, this.handleAddTheirCard, this.handleRemoveTheirCard)}
       </Grid>
     );
   }
