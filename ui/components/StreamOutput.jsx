@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { List } from 'immutable';
-import { Loader, Header } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
 
 const WEBCAM_CONSTRAINTS = { video: true }
 
@@ -61,12 +61,10 @@ export default class StreamOutput extends PureComponent {
 
   componentWillUnmount() {
     this.track.stop();
-    clearTimeout(this.endpointPinger)
   }
 
   captureWebcamImage() {
     this.imageCapture.takePhoto().then(this.handleSendPictureToEndpoint);
-    this.endpointPinger = setTimeout(this.captureWebcamImage, 500);
   }
 
   updateVideoStream() {
@@ -78,7 +76,6 @@ export default class StreamOutput extends PureComponent {
         this.setState({
           videoOn: true,
         })
-        this.captureWebcamImage()
       }
     }
   }
@@ -92,7 +89,10 @@ export default class StreamOutput extends PureComponent {
       return this.renderNoAccess();
     }
     return (
-      <video ref={this.videoRef} autoPlay={true} />
+      <>
+        <video ref={this.videoRef} autoPlay={true} />
+        {this.state.videoOn && <Button onClick={this.captureWebcamImage} primary={true} > Capture Image</Button>}
+      </>
     );
   }
 }
