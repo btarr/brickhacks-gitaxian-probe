@@ -1,15 +1,11 @@
 import React, { PureComponent } from 'react'
-import StreamOutput from './components/StreamOutput';
+import CaptureVideoModal from './components/CaptureVideoModal';
+import 'semantic-ui-css/semantic.min.css'
 
 export default class App extends PureComponent {
-
-  constructor() {
-    super()
-  }
-
   render() {
     return (
-      <StreamOutput />
+      <CaptureVideoModal />
     )
   }
 }

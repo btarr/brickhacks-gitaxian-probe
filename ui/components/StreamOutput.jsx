@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { List } from 'immutable';
+import { Loader, Header } from 'semantic-ui-react';
 
 const WEBCAM_CONSTRAINTS = { video: true }
 
@@ -42,12 +43,11 @@ export default class StreamOutput extends PureComponent {
   componentDidUpdate() {
     if (this.videoRef && this.videoRef.current) {
       this.updateVideoStream();
-      if (!this.state.videoOn) {
-        this.setState({
-          videoOn: true,
-        })
-      }
     }
+  }
+
+  componentWillUnmount() {
+    this.track.stop();
   }
 
   captureWebcamImage(callback) {
@@ -59,23 +59,24 @@ export default class StreamOutput extends PureComponent {
       this.videoRef.current.srcObject = this.state.stream
       this.track = this.state.stream.getVideoTracks()[0];
       this.imageCapture = new ImageCapture(this.track);
+      if (!this.state.videoOn) {
+        this.setState({
+          videoOn: true,
+        })
+      }
     }
   }
 
   renderNoAccess() {
-    return null;
+    return <Header as="h3">Could not access webcam</Header>;
   }
 
   render() {
-    const { stream } = this.state;
-    if (!stream) {
-      return null;
-    }
     if (this.state.noWebcamAccess) {
       return this.renderNoAccess();
     }
     return (
-      <video ref={this.videoRef} src={stream} autoPlay={true} />
+      <video ref={this.videoRef} autoPlay={true} />
     );
   }
 }
